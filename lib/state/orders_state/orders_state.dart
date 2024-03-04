@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-import 'package:waiter_app/models/order_model/order_model.dart';
+import '../../models/order_model/order_model.dart';
 
 part 'orders_state.g.dart';
 
@@ -13,7 +13,8 @@ abstract class OrdersStateBase with Store {
   List<OrderModel> get finishedOrders {
     final _orders = <OrderModel>[];
     for (var i = 0; i < orders.length; i++) {
-      if (!_orders.map((e) => e.id).contains(orders[i].id)) {
+      if (!_orders.map((e) => e.id).contains(orders[i].id) &&
+          orders[i].isFinished == 1) {
         _orders.add(orders[i]);
       }
     }
@@ -21,15 +22,52 @@ abstract class OrdersStateBase with Store {
     return _orders;
   }
 
-  hasActiveOrder(int tableId) {
+  @action
+  void insertOrders(List<OrderModel> items) {
+    for (var i = 0; i < items.length; i++) {
+      final index = orders.indexWhere(
+        (e) =>
+            e.productId == items[i].productId &&
+            e.tableId == items[i].tableId &&
+            e.id == items[i].id,
+      );
+      if (!index.isNegative) {
+        orders[index] = items[i];
+      } else {
+        orders.add(items[i]);
+      }
+    }
 
+    /// update database
+    updateDatabase();
   }
 
-  bool isFreeTable(int tableId) {
-    final res = orders.where(
-          (e) => e.tableId == tableId && e.isFinished == 0,
-    );
+  @action
+  void finishOrders(List<OrderModel> items) {
+    for (var i = 0; i < items.length; i++) {
+      final index = orders.indexWhere(
+        (e) =>
+            e.productId == items[i].productId &&
+            e.tableId == items[i].tableId &&
+            e.id == items[i].id,
+      );
+      if (!index.isNegative) {
+        orders[index] = orders[index].copyWith(
+          productCount: items[i].productCount,
+          isFinished: 1,
+        );
+      } else {
+        orders.add(
+          items[i].copyWith(
+            isFinished: 1,
+          ),
+        );
+      }
+    }
 
-    return res.isEmpty;
+    /// update database
+    updateDatabase();
   }
+
+  Future<void> updateDatabase() async {}
 }

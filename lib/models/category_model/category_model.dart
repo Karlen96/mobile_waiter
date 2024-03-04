@@ -1,4 +1,4 @@
-import 'package:waiter_app/models/product_model/product_model.dart';
+import '../product_model/product_model.dart';
 
 class CategoryModel {
   final int id;
@@ -13,7 +13,7 @@ class CategoryModel {
     this.products = const <ProductModel>[],
   });
 
-  static CategoryModel fromJson(Map<String, dynamic> data) {
+  factory CategoryModel.fromJson(Map<String, dynamic> data) {
     final id = data['id'] as int;
     final name = data['name'] as String;
     final position = data['position'] as int?;

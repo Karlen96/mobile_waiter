@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,7 +11,7 @@ class OrderDetailsPage extends StatelessWidget {
     required this.orderId,
   });
 
-  final int orderId;
+  final String orderId;
 
   OrdersState get ordersState => GetIt.I<OrdersState>();
 
@@ -24,37 +25,58 @@ class OrderDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red.shade50,
-        title: Text('Order: ${list.first.id}'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('Sum: ${sum.toStringAsFixed(1)}'),
-          )
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (_, i) {
-          return ListTile(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    '${list[i].productName}      count ${list[i].productCount}',
+    return Material(
+      child: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: Colors.red.shade50,
+            title: const Text('Order Details'),
+            pinned: true,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text('Sum: ${sum.toStringAsFixed(1)}'),
+              ),
+            ],
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(12),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Table'),
+                      Text('${list.first.tableId}'),
+                    ],
                   ),
+                ],
+              ),
+            ),
+          ),
+          SliverList.builder(
+            itemCount: list.length,
+            itemBuilder: (_, i) {
+              return ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${list[i].productName}      count ${list[i].productCount}',
+                      ),
+                    ),
+                    Text('price: ${list[i].productPrice}'),
+                  ],
                 ),
-                Text('price: ${list[i].productPrice}'),
-              ],
-            ),
-            subtitle: Text(
-              'Total: ${list[i].productCount * list[i].productPrice}',
-            ),
-          );
-        },
+                subtitle: Text(
+                  'Total: ${list[i].productCount * list[i].productPrice}',
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

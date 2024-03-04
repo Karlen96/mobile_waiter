@@ -33,6 +33,31 @@ mixin _$OrdersState on OrdersStateBase, Store {
     });
   }
 
+  late final _$OrdersStateBaseActionController =
+      ActionController(name: 'OrdersStateBase', context: context);
+
+  @override
+  void insertOrders(List<OrderModel> items) {
+    final _$actionInfo = _$OrdersStateBaseActionController.startAction(
+        name: 'OrdersStateBase.insertOrders');
+    try {
+      return super.insertOrders(items);
+    } finally {
+      _$OrdersStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void finishOrders(List<OrderModel> items) {
+    final _$actionInfo = _$OrdersStateBaseActionController.startAction(
+        name: 'OrdersStateBase.finishOrders');
+    try {
+      return super.finishOrders(items);
+    } finally {
+      _$OrdersStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

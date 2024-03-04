@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:waiter_app/models/table_model/table_model.dart';
-import 'package:waiter_app/pages/menu/widgets/basket.dart';
 
-import '../../models/order_model/order_model.dart';
+import '../../models/table_model/table_model.dart';
 import '../../state/menu_state/menu_state.dart';
 import '../../state/orders_state/orders_state.dart';
+import 'widgets/basket.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({
@@ -66,17 +65,9 @@ class _MenuPageState extends State<MenuPage> {
                     .map(
                       (e) => ListTile(
                         onTap: () => _menuState.onAddProduct(
-                          OrderModel(
-                            id: e.id,
-                            productId: e.id,
-                            productName: e.name,
-                            productPrice: e.price,
-                            productCount: 1,
-                            categoryName: _menuState.categories[i].name,
-                            categoryId: _menuState.categories[i].id,
-                            isFinished: 0,
-                            tableId: widget.table.id,
-                          ),
+                          product: e,
+                          category: _menuState.categories[i],
+                          tableId: widget.table.id,
                         ),
                         title: Text('${e.name} : ${e.price}'),
                       ),
@@ -87,12 +78,14 @@ class _MenuPageState extends State<MenuPage> {
           );
         },
       ),
-      floatingActionButton: Observer(builder: (_) {
-        return FloatingActionButton(
-          onPressed: _menuState.basket.isEmpty ? null : onPressed,
-          child: const Text('Basket'),
-        );
-      }),
+      floatingActionButton: Observer(
+        builder: (_) {
+          return FloatingActionButton(
+            onPressed: _menuState.basket.isEmpty ? null : onPressed,
+            child: const Text('Basket'),
+          );
+        },
+      ),
     );
   }
 }

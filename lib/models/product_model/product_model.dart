@@ -13,7 +13,7 @@ class ProductModel {
     required this.price,
   });
 
-  static ProductModel fromJson(Map<String, dynamic> data) {
+  factory ProductModel.fromJson(Map<String, dynamic> data) {
     final id = data['id'] as int;
     final name = data['name'] as String;
     final description = data['description'] as String;

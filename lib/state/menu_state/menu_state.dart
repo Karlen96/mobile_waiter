@@ -1,9 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../data_base/data_base_provider.dart';
 import '../../models/category_model/category_model.dart';
 import '../../models/order_model/order_model.dart';
+import '../../models/product_model/product_model.dart';
 import '../orders_state/orders_state.dart';
 
 part 'menu_state.g.dart';
@@ -20,29 +22,62 @@ abstract class MenuStateBase with Store {
   ObservableList<OrderModel> basket = ObservableList<OrderModel>();
 
   @action
-  void onRemove(int orderItemId) {
-    final index = basket.indexWhere((e) => e.id == orderItemId);
+  void onRemove(int productItemId) {
+    final index = basket.indexWhere((e) => e.productId == productItemId);
     if (!index.isNegative) {
       basket.removeAt(index);
     }
   }
 
-  Future<void> onSave() async {
-    // ordersState.
-    // final
+  void onSave() {
+    ordersState.insertOrders(basket);
+  }
+
+  void onPay() {
+    ordersState.finishOrders(basket);
   }
 
   @action
-  void onAddProduct(OrderModel orderItem) {
+  void onAddProduct({
+    required ProductModel product,
+    required CategoryModel category,
+    required int tableId,
+  }) {
+    var orderId = const Uuid().v4();
+
+    // final onGoingOrders = ordersState.orders.where(
+    final onGoingOrders = basket.where(
+      (e) => e.tableId == tableId && e.isFinished == 0,
+    );
+
+    if (onGoingOrders.isNotEmpty) {
+      orderId = onGoingOrders.first.id;
+    }
+
+    final order = OrderModel(
+      id: orderId,
+      productId: product.id,
+      productName: product.name,
+      productPrice: product.price,
+      productCount: 1,
+      categoryName: category.name,
+      categoryId: category.id,
+      isFinished: 0,
+      tableId: tableId,
+    );
+
     final index = basket.indexWhere(
-      (e) => e.productId == orderItem.productId,
+      (e) => e.productId == product.id,
     );
     if (!index.isNegative) {
-      onIncrementCount(orderItem.productId);
+      onIncrementCount(
+        productItemId: product.id,
+        tableId: tableId,
+      );
       return;
     }
 
-    basket.add(orderItem);
+    basket.add(order);
   }
 
   @action
@@ -66,7 +101,7 @@ abstract class MenuStateBase with Store {
       /// get initial basket
       basket = ordersState.orders
           .where(
-            (e) => e.tableId == tableId,
+            (e) => e.tableId == tableId && e.isFinished == 0,
           )
           .toList()
           .asObservable();
@@ -76,8 +111,13 @@ abstract class MenuStateBase with Store {
   }
 
   @action
-  void onIncrementCount(int orderItemId) {
-    final index = basket.indexWhere((e) => e.id == orderItemId);
+  void onIncrementCount({
+    required int productItemId,
+    required int tableId,
+  }) {
+    final index = basket.indexWhere(
+      (e) => e.productId == productItemId && e.tableId == tableId,
+    );
     if (!index.isNegative) {
       final count = basket[index].productCount;
       basket[index] = basket[index].copyWith(
@@ -87,8 +127,13 @@ abstract class MenuStateBase with Store {
   }
 
   @action
-  void onDecrementCount(int orderItemId) {
-    final index = basket.indexWhere((e) => e.id == orderItemId);
+  void onDecrementCount({
+    required int productItemId,
+    required int tableId,
+  }) {
+    final index = basket.indexWhere(
+      (e) => e.productId == productItemId && e.tableId == tableId,
+    );
     if (!index.isNegative) {
       final count = basket[index].productCount;
       if (count == 0) {

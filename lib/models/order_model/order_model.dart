@@ -1,5 +1,5 @@
 class OrderModel {
-  final int id;
+  final String id;
   final int productId;
   final String productName;
   final int tableId;
@@ -21,8 +21,8 @@ class OrderModel {
     required this.isFinished,
   });
 
-  static OrderModel fromJson(Map<String, dynamic> data) {
-    final id = data['id'] as int;
+  factory OrderModel.fromJson(Map<String, dynamic> data) {
+    final id = data['id'] as String;
     final productId = data['product_id'] as int;
     final productName = data['product_name'] as String;
     final categoryName = data['category_name'] as String;
@@ -46,7 +46,7 @@ class OrderModel {
   }
 
   OrderModel copyWith({
-    int? id,
+    String? id,
     int? productId,
     String? productName,
     double? productPrice,

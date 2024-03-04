@@ -11,7 +11,7 @@ class TableModel {
     this.position = 0,
   });
 
-  static TableModel fromJson(Map<String, dynamic> data) {
+  factory TableModel.fromJson(Map<String, dynamic> data) {
     final id = data['id'] as int;
     final name = data['name'] as String;
     final position = data['position'] as int;

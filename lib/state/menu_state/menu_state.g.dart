@@ -53,44 +53,50 @@ mixin _$MenuState on MenuStateBase, Store {
       ActionController(name: 'MenuStateBase', context: context);
 
   @override
-  void onRemove(int orderItemId) {
+  void onRemove(int productItemId) {
     final _$actionInfo = _$MenuStateBaseActionController.startAction(
         name: 'MenuStateBase.onRemove');
     try {
-      return super.onRemove(orderItemId);
+      return super.onRemove(productItemId);
     } finally {
       _$MenuStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void onAddProduct(OrderModel orderItem) {
+  void onAddProduct(
+      {required ProductModel product,
+      required CategoryModel category,
+      required int tableId}) {
     final _$actionInfo = _$MenuStateBaseActionController.startAction(
         name: 'MenuStateBase.onAddProduct');
     try {
-      return super.onAddProduct(orderItem);
+      return super
+          .onAddProduct(product: product, category: category, tableId: tableId);
     } finally {
       _$MenuStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void onIncrementCount(int orderItemId) {
+  void onIncrementCount({required int productItemId, required int tableId}) {
     final _$actionInfo = _$MenuStateBaseActionController.startAction(
         name: 'MenuStateBase.onIncrementCount');
     try {
-      return super.onIncrementCount(orderItemId);
+      return super
+          .onIncrementCount(productItemId: productItemId, tableId: tableId);
     } finally {
       _$MenuStateBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void onDecrementCount(int orderItemId) {
+  void onDecrementCount({required int productItemId, required int tableId}) {
     final _$actionInfo = _$MenuStateBaseActionController.startAction(
         name: 'MenuStateBase.onDecrementCount');
     try {
-      return super.onDecrementCount(orderItemId);
+      return super
+          .onDecrementCount(productItemId: productItemId, tableId: tableId);
     } finally {
       _$MenuStateBaseActionController.endAction(_$actionInfo);
     }

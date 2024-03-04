@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:waiter_app/models/category_model/category_model.dart';
 
 import '../configs/main_configs.dart';
+import '../models/category_model/category_model.dart';
 import '../models/order_model/order_model.dart';
 import '../models/product_model/product_model.dart';
 import '../models/table_model/table_model.dart';
@@ -18,7 +18,7 @@ class DataBaseProvider {
     db = await openDatabase(
       dataBaseName,
       version: 1,
-      onCreate: (Database db, int version) async {
+      onCreate: (db, version) {
         /// create migration if dataBase is not exists
         InitialMigration.initInitialTables(db);
       },

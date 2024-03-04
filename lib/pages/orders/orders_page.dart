@@ -14,33 +14,35 @@ class OrdersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        Observer(builder: (context) {
-          final orders = ordersState.finishedOrders;
+        Observer(
+          builder: (context) {
+            final orders = ordersState.finishedOrders;
 
-          if (orders.isEmpty) {
-            return const SliverFillRemaining(
-              child: Center(
-                child: Text('Empty orders'),
-              ),
-            );
-          }
+            if (orders.isEmpty) {
+              return const SliverFillRemaining(
+                child: Center(
+                  child: Text('Empty orders'),
+                ),
+              );
+            }
 
-          return SliverList.builder(
-            itemCount: orders.length,
-            itemBuilder: (_, int i) {
-              return ListTile(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => OrderDetailsPage(
-                      orderId: orders[i].id,
+            return SliverList.builder(
+              itemCount: orders.length,
+              itemBuilder: (_, i) {
+                return ListTile(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => OrderDetailsPage(
+                        orderId: orders[i].id,
+                      ),
                     ),
                   ),
-                ),
-                title: Text('Order ${orders[i].id}'),
-              );
-            },
-          );
-        }),
+                  title: Text('Order $i'),
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }
