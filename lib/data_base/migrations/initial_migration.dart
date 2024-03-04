@@ -43,11 +43,5 @@ class InitialMigration {
           'INSERT INTO ${TableNames.products} (name, description, category_id, price, position) VALUES("product $i", "description $i", 2, ${100 * (i + 1)}, $i);',
         );
     }
-
-    /// insert Orders
-    // db.execute(
-    //     'INSERT INTO ${TableNames.orders} (id, table_id, product_id, product_name, product_price, product_count, category_name, category_id, isFinished) VALUES(0, 1, 0, "product_1", 100, 2, "category_0", 1, false);');
-    // db.execute(
-    //     'INSERT INTO ${TableNames.orders} (id, table_id, product_id, product_name, product_price, product_count, category_name, category_id, isFinished) VALUES(0, 1, 1, "product_2", 200, 1, "category_0", 1, true);');
   }
 }

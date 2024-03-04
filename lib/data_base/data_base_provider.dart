@@ -36,13 +36,8 @@ class DataBaseProvider {
     GetIt.I<TablesState>().tables = tablesArray.asObservable();
 
     /// Set orders data
-    final orders = await db.rawQuery('SELECT * FROM ${TableNames.orders}');
-    final ordersArray = List<OrderModel>.from(
-      orders.map(
-        (model) => OrderModel.fromJson(model),
-      ),
-    );
-    GetIt.I<OrdersState>().orders = ordersArray.asObservable();
+    final orders = await getOrders();
+    GetIt.I<OrdersState>().orders = orders.asObservable();
   }
 
   static Future<List<CategoryModel>> getCategories() async {
@@ -69,5 +64,30 @@ class DataBaseProvider {
     );
 
     return productsArray;
+  }
+
+  static Future<List<OrderModel>> getOrders() async {
+    final orders = await db.rawQuery(
+      'SELECT * FROM ${TableNames.orders}',
+    );
+    final ordersArray = List<OrderModel>.from(
+      orders.map(
+        (model) => OrderModel.fromJson(model),
+      ),
+    );
+
+    return ordersArray;
+  }
+
+  static Future<void> insertOrders() async {
+    await db.execute('DELETE FROM ${TableNames.orders}');
+
+    final orders = GetIt.I<OrdersState>().orders;
+
+    for (var i = 0; i < orders.length; i++) {
+      db.execute(
+        'INSERT INTO ${TableNames.orders} (id, table_id, product_id, product_name, product_price, product_count, category_name, category_id, isFinished) VALUES("${orders[i].id}", ${orders[i].tableId}, ${orders[i].productId}, "${orders[i].productName}", ${orders[i].productPrice}, ${orders[i].productCount}, "${orders[i].categoryName}", ${orders[i].categoryId}, ${orders[i].isFinished});',
+      );
+    }
   }
 }

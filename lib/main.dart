@@ -10,12 +10,12 @@ import 'theme/theme_data.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await deleteDatabase(dataBaseName);
+    // await deleteDatabase(dataBaseName);
     await DataBaseProvider.init();
-    DataBaseProvider.getInitialData();
     registerSingletons();
+    await DataBaseProvider.getInitialData();
   } catch (e) {
-    deleteDatabase(dataBaseName);
+    await deleteDatabase(dataBaseName);
   }
   runApp(const MyApp());
 }

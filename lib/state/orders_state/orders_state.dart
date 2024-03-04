@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import '../../data_base/data_base_provider.dart';
 import '../../models/order_model/order_model.dart';
 
 part 'orders_state.g.dart';
@@ -69,5 +70,7 @@ abstract class OrdersStateBase with Store {
     updateDatabase();
   }
 
-  Future<void> updateDatabase() async {}
+  Future<void> updateDatabase() async {
+    await DataBaseProvider.insertOrders();
+  }
 }
